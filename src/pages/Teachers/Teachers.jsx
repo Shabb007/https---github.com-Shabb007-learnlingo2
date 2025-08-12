@@ -19,6 +19,14 @@ const Teachers = ({ authUser }) => {
   const errorState = useSelector(selectError);
   const [visibleTeachers, setVisibleTeachers] = useState(4);
 
+  // Debug logs
+  console.log("teacherList:", teacherList);
+  console.log("teacherList.length:", teacherList?.length);
+  console.log("visibleTeachers:", visibleTeachers);
+  console.log("Should show Load More:", teacherList?.length > visibleTeachers);
+  console.log("loadingState:", loadingState);
+  console.log("errorState:", errorState);
+
   const loadMoreTeachers = () => {
     setVisibleTeachers((prevVisibleTeachers) => prevVisibleTeachers + 4);
   };
@@ -29,13 +37,27 @@ const Teachers = ({ authUser }) => {
 
   return (
     <Container>
-      {loadingState && !errorState && <Loader />}
-      <CardList
-        authUser={authUser}
-        teachers={teacherList.slice(0, visibleTeachers)}
-      />
-      {teacherList.length > visibleTeachers && (
-        <LoadMoreButton onClick={loadMoreTeachers}>Load More</LoadMoreButton>
+      {loadingState && <Loader />}
+      {errorState && (
+        <div style={{ color: 'red', textAlign: 'center', padding: '20px' }}>
+          Error loading teachers: {errorState}
+        </div>
+      )}
+      {!loadingState && !errorState && teacherList && teacherList.length > 0 && (
+        <>
+          <CardList
+            authUser={authUser}
+            teachers={teacherList?.slice(0, visibleTeachers) || []}
+          />
+          {teacherList && teacherList.length > visibleTeachers && (
+            <LoadMoreButton onClick={loadMoreTeachers}>Load More</LoadMoreButton>
+          )}
+        </>
+      )}
+      {!loadingState && !errorState && (!teacherList || teacherList.length === 0) && (
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          No teachers found. Please check the console for more information.
+        </div>
       )}
     </Container>
   );

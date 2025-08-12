@@ -36,7 +36,9 @@ export const ContentWrapper = styled.div`
     max-width: 720px;
     height: 530px;
     padding-left: 70px;
-    display: block;
+    padding-right: 70px;
+    display: flex;
+    align-items: center;
   }
 `;
 
@@ -68,12 +70,13 @@ export const Subtitle = styled.p`
   line-height: 1.37;
   letter-spacing: -0.02em;
   margin-top: 32px;
-  margin-bottom: 64px;
+  margin-bottom: 24px;
   text-align: center;
 
   @media screen and (min-width: 1400px) {
     width: 471px;
     text-align: start;
+    margin-bottom: 20px;
   }
 `;
 
@@ -86,6 +89,9 @@ export const CustomLink = styled(Link)`
   color: ${({ theme }) => theme.primaryBlack};
   background: ${({ theme }) => theme.primaryYellow};
   margin-bottom: 20px;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
 
   &:hover {
     color: ${({ theme }) => theme.primaryYellow};
