@@ -3,12 +3,9 @@ import { get, ref } from "firebase/database";
 import { database } from "../../firebase/config";
 
 export const fetchTeachersAsync = createAsyncThunk(
-  "/teachers/fetchAll",
+  "teachers/fetchAll",
   async (_, thunkAPI) => {
     console.log("Starting to fetch teachers...");
-    console.log("Environment variables check:");
-    console.log("VITE_API_KEY:", import.meta.env.VITE_API_KEY ? "Set" : "Not set");
-    console.log("VITE_API_KEY value:", import.meta.env.VITE_API_KEY);
 
     // Mock data for fallback
     const mockTeachers = [
@@ -204,15 +201,15 @@ export const fetchTeachersAsync = createAsyncThunk(
     ];
 
     // Check if Firebase is properly configured
-    const apiKey = import.meta.env.VITE_API_KEY;
-    if (!apiKey || apiKey === "your-api-key-here") {
-      console.log("Firebase not configured, using mock data...");
-      console.log("Returning mock data:", mockTeachers.length, "teachers");
-      return mockTeachers;
-    }
-
-    // Try to fetch from Firebase
     try {
+      const apiKey = import.meta.env.VITE_API_KEY;
+      if (!apiKey || apiKey === "your-api-key-here") {
+        console.log("Firebase not configured, using mock data...");
+        console.log("Returning mock data:", mockTeachers.length, "teachers");
+        return mockTeachers;
+      }
+
+      // Try to fetch from Firebase
       const teachersRef = ref(database, "teachers");
       const snapshot = await get(teachersRef);
       
@@ -230,8 +227,8 @@ export const fetchTeachersAsync = createAsyncThunk(
         return mockTeachers;
       }
     } catch (error) {
-      console.error("Error fetching teachers from Firebase:", error);
-      console.log("Falling back to mock data due to Firebase error...");
+      console.error("Error in fetchTeachersAsync:", error);
+      console.log("Falling back to mock data due to error...");
       console.log("Returning mock data:", mockTeachers.length, "teachers");
       return mockTeachers;
     }
