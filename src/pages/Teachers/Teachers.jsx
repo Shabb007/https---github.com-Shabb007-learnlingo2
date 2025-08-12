@@ -19,13 +19,6 @@ const Teachers = ({ authUser }) => {
   const errorState = useSelector(selectError);
   const [visibleTeachers, setVisibleTeachers] = useState(4);
 
-  console.log("Teachers component state:", {
-    teacherListLength: teacherList.length,
-    loadingState,
-    errorState,
-    visibleTeachers
-  });
-
   const loadMoreTeachers = () => {
     setVisibleTeachers((prevVisibleTeachers) => prevVisibleTeachers + 4);
   };
@@ -36,13 +29,11 @@ const Teachers = ({ authUser }) => {
 
   return (
     <Container>
-      {loadingState && !errorState && teacherList.length === 0 && <Loader />}
-      {teacherList.length > 0 && (
-        <CardList
-          authUser={authUser}
-          teachers={teacherList.slice(0, visibleTeachers)}
-        />
-      )}
+      {loadingState && !errorState && <Loader />}
+      <CardList
+        authUser={authUser}
+        teachers={teacherList.slice(0, visibleTeachers)}
+      />
       {teacherList.length > visibleTeachers && (
         <LoadMoreButton onClick={loadMoreTeachers}>Load More</LoadMoreButton>
       )}

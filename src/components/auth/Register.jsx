@@ -23,22 +23,6 @@ export const Register = ({ handleClose }) => {
   const handleSubmit = (values) => {
     const { email, password } = values;
 
-    // Check if using placeholder Firebase credentials
-    if (import.meta.env.VITE_API_KEY === "your-api-key-here" || !import.meta.env.VITE_API_KEY) {
-      // Simulate successful registration for development
-      console.log("Development mode: Simulating registration for:", email);
-      toast.success("Registration successful! (Development mode)");
-      
-      // Dispatch custom event for development mode authentication
-      window.dispatchEvent(new CustomEvent('dev-auth', {
-        detail: { type: 'register', email, name: values.name }
-      }));
-      
-      handleClose();
-      return;
-    }
-
-    // Real Firebase registration
     createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
         handleClose();
