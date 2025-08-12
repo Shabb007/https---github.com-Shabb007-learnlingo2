@@ -212,14 +212,18 @@ export const fetchTeachersAsync = createAsyncThunk(
       // Try to fetch from Firebase
       const teachersRef = ref(database, "teachers");
       const snapshot = await get(teachersRef);
-      
+
       if (snapshot.exists()) {
         const teachersData = snapshot.val();
-        const teachersArray = Object.keys(teachersData).map(key => ({
+        const teachersArray = Object.keys(teachersData).map((key) => ({
           id: key,
-          ...teachersData[key]
+          ...teachersData[key],
         }));
-        console.log("Fetched teachers from Firebase:", teachersArray.length, "teachers");
+        console.log(
+          "Fetched teachers from Firebase:",
+          teachersArray.length,
+          "teachers"
+        );
         return teachersArray;
       } else {
         console.log("No teachers found in Firebase, using mock data...");
