@@ -23,12 +23,49 @@ export const Register = ({ handleClose }) => {
   const handleSubmit = (values) => {
     const { email, password } = values;
 
+    // Check if Firebase is properly configured
+    const apiKey = import.meta.env.VITE_API_KEY;
+    if (!apiKey || apiKey === "your-api-key-here") {
+      toast.error("Firebase is not configured. Please set up your Firebase credentials.");
+      console.error("Firebase configuration error: Missing or invalid API key");
+      return;
+    }
+
+    console.log("Attempting to register user:", { email, name: values.name });
+
     createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
+      .then((userCredential) => {
+        console.log("Registration successful:", userCredential.user);
+        toast.success("Registration successful! Welcome to LearnLingo!");
         handleClose();
       })
-      .catch(() => {
-        toast.error("Apologies, an error occurred. Please try again later!");
+      .catch((error) => {
+        console.error("Registration error:", error);
+        
+        // Provide specific error messages
+        let errorMessage = "Registration failed. Please try again.";
+        
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            errorMessage = "This email is already registered. Please use a different email or try logging in.";
+            break;
+          case 'auth/invalid-email':
+            errorMessage = "Please enter a valid email address.";
+            break;
+          case 'auth/weak-password':
+            errorMessage = "Password is too weak. Please use at least 8 characters.";
+            break;
+          case 'auth/network-request-failed':
+            errorMessage = "Network error. Please check your internet connection.";
+            break;
+          case 'auth/operation-not-allowed':
+            errorMessage = "Email/password registration is not enabled. Please contact support.";
+            break;
+          default:
+            errorMessage = `Registration failed: ${error.message}`;
+        }
+        
+        toast.error(errorMessage);
       });
   };
 
